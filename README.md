@@ -1,7 +1,7 @@
 <div align="center">
   <img src="logo.svg" width="160" alt="Rust Rig AI logo"/>
-  <br/>
   <h1>Rust Rig AI</h1>
+  <p><em>Aplicação desktop Rust com Ollama + busca web MCP + S3</em></p>
 
   [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
   [![Docs](https://img.shields.io/badge/docs-online-blue?logo=github)](https://daniel-dos.github.io/rust-ollama-chat/)
