@@ -1,3 +1,5 @@
+#![doc(html_logo_url = "https://raw.githubusercontent.com/Daniel-Dos/rust-ollama-chat/master/logo.svg")]
+
 //! Aplicação desktop Rust Rig AI — integração Ollama + busca web MCP + S3.
 //!
 //! # Fluxo principal
