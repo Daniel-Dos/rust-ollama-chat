@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="logo.svg" width="120" alt="Rust Rig AI logo"/>
+  <img src="logo.svg" width="160" alt="Rust Rig AI logo"/>
   <br/>
   <h1>Rust Rig AI</h1>
 
