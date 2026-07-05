@@ -2,7 +2,7 @@
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-CLI em Rust que integra Ollama (LLM local) com busca web via MCP server e upload para S3.
+Aplicação desktop em Rust com interface gráfica (Iced) que integra Ollama (LLM local) com busca web via MCP server e upload para S3.
 
 **Funcionalidades:**
 
@@ -55,6 +55,9 @@ CLI em Rust que integra Ollama (LLM local) com busca web via MCP server e upload
    cargo run
    ```
 
+   ⚠️ A aplicacao abre uma **janela grafica** (nao e mais um programa puramente CLI).
+   A janela exibe um splash de 5s e em seguida o chat com campo de texto e botao "Enviar".
+
 ---
 
 ## Variaveis de Ambiente
@@ -71,15 +74,20 @@ CLI em Rust que integra Ollama (LLM local) com busca web via MCP server e upload
 ## Arquitetura
 
 ```
-src/main.rs
-  ├── McpClientManager::init()     → sobe Python MCP server uma vez
+src/main.rs (fn main — sem #[tokio::main])
+  ├── tokio::runtime::Runtime::new() + rt.enter()
+  ├── McpClientManager::init()     → sobe Python MCP server uma vez (via rt.block_on)
   ├── banner_text::print_banner()
-  ├── rust_ollama::resposta_chat(&mcp_manager, prompt)
-  │     ├── extrair_url(prompt)    → regex decide se e fetch direto ou busca
-  │     ├── fetch_url(peer, url)   → se tem URL
-  │     └── search_and_fetch(peer, q) → busca + fetch do primeiro resultado
-  ├── upload resposta para S3
-  └── mcp_manager.shutdown()
+  ├── println!("Iniciando interface gráfica...")
+  ├── std::thread::sleep(3s)       ← delay terminal antes da janela
+  ├── gui::app::run(&mcp_manager)  ← janela Iced
+  │     ├── Splash 5s com barra de progresso animada (█░)
+  │     ├── text_input + button "Enviar"
+  │     ├── mostra "Processando..." durante espera
+  │     ├── Task::perform(resposta_chat_peer(peer, prompt), ...)
+  │     └── devolve resposta para main quando fecha
+  ├── mcp_manager.shutdown()
+  └── s3::get_my_bucket() + upload_bucket()
 ```
 
 ### Fluxo de decisao URL vs busca
@@ -98,6 +106,7 @@ src/main.rs
 | tokio | 1.52.3 | Runtime assincrono |
 | aws-sdk-s3 | 1.137.0 | Upload S3 |
 | regex | 1.12.4 | Extracao de URLs |
+| iced | 0.13 (feature `tokio`) | Interface grafica desktop |
 | Python | mcp>=1.0.0, ollama>=0.4.0, rich>=13.0.0 | Servidor MCP |
 
 ---

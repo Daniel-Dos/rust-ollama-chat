@@ -1,3 +1,8 @@
+//! Integração com ferramentas de busca web do servidor MCP Python.
+//!
+//! Fornece funções para extrair URLs de textos, buscar na web e obter
+//! o conteúdo completo de páginas via chamadas MCP (`web_search`, `web_fetch`).
+
 use regex::Regex;
 use rmcp::model::CallToolRequestParams;
 use rmcp::{Peer, RoleClient};
@@ -16,12 +21,29 @@ fn extrair_texto(result: &rmcp::model::CallToolResult) -> String {
         .join("\n")
 }
 
+/// Extrai URLs de uma string usando regex.
+///
+/// Retorna uma lista com todas as URLs HTTP/HTTPS encontradas no texto.
+///
+/// # Exemplo
+///
+/// ```
+/// let urls = extrair_url("Veja https://example.com e http://teste.org");
+/// assert_eq!(urls.len(), 2);
+/// ```
 pub fn extrair_url(url: &str) -> Vec<String> {
     let re = Regex::new(r#"https?://[a-zA-Z0-9./?=_%:&#-]+"#)
         .unwrap_or_else(|_| panic!("Falha ao compilar a expressão regular para extrair URLs"));
     re.find_iter(url).map(|m| m.as_str().into()).collect()
 }
 
+/// Executa uma busca web via ferramenta MCP `web_search`.
+///
+/// Envia a consulta ao servidor Python que realiza a busca e retorna
+/// os resultados como texto.
+///
+/// **Nota:** Esta função está marcada como `#[allow(dead_code)]` —
+/// mantida para compatibilidade, mas não utilizada no fluxo principal.
 #[allow(dead_code)]
 pub async fn search_web(peer: &Peer<RoleClient>, query: &str) -> Result<String, anyhow::Error> {
     let args = serde_json::json!({ "query": query, "max_results": 5 })
@@ -39,6 +61,9 @@ pub async fn search_web(peer: &Peer<RoleClient>, query: &str) -> Result<String, 
     Ok(texto)
 }
 
+/// Obtém o conteúdo de uma URL via ferramenta MCP `web_fetch`.
+///
+/// O servidor Python baixa a página e retorna seu conteúdo textual.
 pub async fn fetch_url(peer: &Peer<RoleClient>, url: &str) -> Result<String, anyhow::Error> {
     let args = serde_json::json!({ "url": url })
         .as_object()
@@ -55,6 +80,12 @@ pub async fn fetch_url(peer: &Peer<RoleClient>, url: &str) -> Result<String, any
     Ok(texto)
 }
 
+/// Combina busca web com fetch da primeira página encontrada.
+///
+/// 1. Executa `web_search` para encontrar resultados.
+/// 2. Extrai a URL do primeiro resultado do JSON retornado.
+/// 3. Executa `web_fetch` para obter o conteúdo completo.
+/// 4. Retorna ambos os resultados formatados em um único texto.
 pub async fn search_and_fetch(
     peer: &Peer<RoleClient>,
     query: &str,

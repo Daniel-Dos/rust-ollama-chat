@@ -1,3 +1,9 @@
+//! Upload de respostas do chat para AWS S3.
+//!
+//! Utiliza o SDK AWS configurado via cadeia de provedores padrão
+//! (variáveis de ambiente, perfil, IMDS, etc.) para listar buckets
+//! e fazer upload de arquivos `.md` com nomes aleatórios.
+
 use std::ops::Add;
 use anyhow::Context;
 use aws_config::meta::region::RegionProviderChain;
@@ -25,6 +31,15 @@ fn client_new(config: &aws_config::SdkConfig) -> S3Client {
     S3Client::new(config)
 }
 
+/// Obtém o nome do primeiro bucket S3 disponível na conta.
+///
+/// Lista todos os buckets da conta AWS configurada e retorna o nome
+/// do primeiro encontrado.
+///
+/// # Errors
+///
+/// Retorna erro se a configuração AWS falhar, se não houver buckets
+/// na conta, ou se a listagem falhar.
 pub async fn get_my_bucket() ->  Result<String, anyhow::Error> {
 
     let config = configure_aws().await.inspect_err(|e| tracing::error!("Falha ao configurar AWS: {e}"))?;
@@ -40,6 +55,14 @@ pub async fn get_my_bucket() ->  Result<String, anyhow::Error> {
     Ok(meu_bucket)
 }
 
+/// Faz upload de uma string como arquivo `.md` para o bucket S3 especificado.
+///
+/// Gera um nome de arquivo aleatório de 10 caracteres e faz upload
+/// do conteúdo com a extensão `.md`.
+///
+/// # Errors
+///
+/// Retorna erro se a configuração AWS falhar ou se o upload falhar.
 pub async fn upload_bucket(my_bucket: String, payload: String) -> Result<(), anyhow::Error> {
     let config = configure_aws().await.inspect_err(|e| tracing::error!("Falha ao configurar AWS: {e}"))?;
     let client_s3 = client_new(&config);
@@ -57,9 +80,8 @@ pub async fn upload_bucket(my_bucket: String, payload: String) -> Result<(), any
 
 fn generete_random_file_name() -> String {
     let rng  = rand::rng();
-    let file_name_aleatorio = rng.sample_iter(&Alphabetic)
+    rng.sample_iter(&Alphabetic)
         .take(10)
         .map(char::from)
-        .collect();
-    file_name_aleatorio
+        .collect()
 }
