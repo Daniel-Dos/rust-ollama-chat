@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1D2B53"/>
+      <stop offset="100%" stop-color="#0F1A2E"/>
+    </linearGradient>
+    <linearGradient id="orange" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#DEA584"/>
+      <stop offset="100%" stop-color="#C4784A"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="100" cy="100" r="95" fill="url(#bg)" stroke="#DEA584" stroke-width="3"/>
+
+  <polygon points="100,55 135,75 135,115 100,135 65,115 65,75"
+           fill="url(#orange)" stroke="#C4784A" stroke-width="2"/>
+
+  <circle cx="85" cy="85" r="8" fill="#1D2B53"/>
+  <circle cx="115" cy="85" r="8" fill="#1D2B53"/>
+  <circle cx="85" cy="85" r="3" fill="#5CCFE6"/>
+  <circle cx="115" cy="85" r="3" fill="#5CCFE6"/>
+
+  <path d="M65,75 Q40,60 35,80 Q30,100 50,90" fill="url(#orange)" stroke="#C4784A" stroke-width="2"/>
+  <path d="M65,95 Q35,105 30,115 Q25,135 50,125" fill="none" stroke="#DEA584" stroke-width="3" stroke-linecap="round"/>
+
+  <path d="M135,75 Q160,60 165,80 Q170,100 150,90" fill="url(#orange)" stroke="#C4784A" stroke-width="2"/>
+  <path d="M135,95 Q165,105 170,115 Q175,135 150,125" fill="none" stroke="#DEA584" stroke-width="3" stroke-linecap="round"/>
+
+  <ellipse cx="100" cy="100" rx="80" ry="30" fill="none" stroke="#5CCFE6" stroke-width="1.5" opacity="0.5" transform="rotate(-20,100,100)"/>
+  <ellipse cx="100" cy="100" rx="80" ry="30" fill="none" stroke="#5CCFE6" stroke-width="1.5" opacity="0.5" transform="rotate(20,100,100)"/>
+
+  <circle cx="42" cy="58" r="4" fill="#5CCFE6" opacity="0.8"/>
+  <circle cx="158" cy="58" r="4" fill="#5CCFE6" opacity="0.8"/>
+  <circle cx="42" cy="142" r="4" fill="#5CCFE6" opacity="0.8"/>
+  <circle cx="158" cy="142" r="4" fill="#5CCFE6" opacity="0.8"/>
+  <circle cx="100" cy="30" r="4" fill="#5CCFE6" opacity="0.8"/>
+  <circle cx="100" cy="170" r="4" fill="#5CCFE6" opacity="0.8"/>
+
+  <text x="100" y="190" text-anchor="middle" font-family="monospace" font-size="11" fill="#DEA584" font-weight="bold">RUST RIG AI</text>
+</svg>

@@ -1,6 +1,11 @@
-# Rust-Rig-AI
+<div align="center">
+  <img src="logo.svg" width="120" alt="Rust Rig AI logo"/>
+  <br/>
+  <h1>Rust Rig AI</h1>
 
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+  [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+  [![Docs](https://img.shields.io/badge/docs-online-blue?logo=github)](https://daniel-dos.github.io/rust-ollama-chat/)
+</div>
 
 Aplicação desktop em Rust com interface gráfica (Iced) que integra Ollama (LLM local) com busca web via MCP server e upload para S3.
 
