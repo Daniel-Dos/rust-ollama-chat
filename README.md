@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="logo.svg" width="160" alt="Rust Rig AI logo"/>
+  <img src="logo.svg" width="400" alt="Rust Rig AI logo"/>
   <h1>Rust Rig AI</h1>
   <p><em>Aplicação desktop Rust com Ollama + busca web MCP + S3</em></p>
 
