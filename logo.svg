@@ -1,38 +1,81 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 120" width="100%" height="100%">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1D2B53"/>
-      <stop offset="100%" stop-color="#0F1A2E"/>
-    </linearGradient>
-    <linearGradient id="orange" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="rustgrad" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#DEA584"/>
       <stop offset="100%" stop-color="#C4784A"/>
     </linearGradient>
+    <linearGradient id="cyangrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5CCFE6"/>
+      <stop offset="100%" stop-color="#38A9C5"/>
+    </linearGradient>
   </defs>
 
-  <circle cx="100" cy="100" r="95" fill="url(#bg)" stroke="#DEA584" stroke-width="3"/>
+  <!-- ===== ICON MARK ===== -->
+  <g>
+    <!-- Outer hexagon (Rust identity + rig structure) -->
+    <polygon points="93,82 55,104 17,82 17,38 55,16 93,38"
+             fill="none" stroke="#DEA584" stroke-width="3" stroke-linejoin="round"/>
 
-  <polygon points="100,52 138,74 138,118 100,140 62,118 62,74"
-           fill="url(#orange)" stroke="#C4784A" stroke-width="2"/>
+    <!-- Inner dotted hexagon (gear detail / neural net) -->
+    <polygon points="85,76 55,94 25,76 25,44 55,26 85,44"
+             fill="none" stroke="#5CCFE6" stroke-width="1.5" stroke-dasharray="4 4" stroke-linejoin="round"/>
 
-  <circle cx="82" cy="84" r="9" fill="#1D2B53"/>
-  <circle cx="118" cy="84" r="9" fill="#1D2B53"/>
-  <circle cx="82" cy="84" r="3.5" fill="#5CCFE6"/>
-  <circle cx="118" cy="84" r="3.5" fill="#5CCFE6"/>
+    <!-- Central gear / rig circle -->
+    <circle cx="55" cy="60" r="14" fill="none" stroke="#DEA584" stroke-width="2"/>
+    <circle cx="55" cy="60" r="8" fill="url(#rustgrad)" opacity="0.3"/>
+    <circle cx="55" cy="60" r="3" fill="#DEA584"/>
 
-  <path d="M62,72 Q34,56 28,78 Q22,100 46,90" fill="url(#orange)" stroke="#C4784A" stroke-width="2"/>
-  <path d="M62,96 Q30,106 24,118 Q18,142 46,130" fill="none" stroke="#DEA584" stroke-width="3.5" stroke-linecap="round"/>
+    <!-- Gear teeth (distributed processing nodes) -->
+    <circle cx="55" cy="44" r="3.5" fill="#DEA584"/>
+    <circle cx="55" cy="76" r="3.5" fill="#DEA584"/>
+    <circle cx="39" cy="52" r="3.5" fill="#DEA584"/>
+    <circle cx="71" cy="52" r="3.5" fill="#DEA584"/>
+    <circle cx="39" cy="68" r="3.5" fill="#DEA584"/>
+    <circle cx="71" cy="68" r="3.5" fill="#DEA584"/>
 
-  <path d="M138,72 Q166,56 172,78 Q178,100 154,90" fill="url(#orange)" stroke="#C4784A" stroke-width="2"/>
-  <path d="M138,96 Q170,106 176,118 Q182,142 154,130" fill="none" stroke="#DEA584" stroke-width="3.5" stroke-linecap="round"/>
+    <!-- Hexagon vertices (Rust crab eye style) -->
+    <circle cx="93" cy="82" r="4.5" fill="#1D2B53"/>
+    <circle cx="55" cy="104" r="4.5" fill="#1D2B53"/>
+    <circle cx="17" cy="82" r="4.5" fill="#1D2B53"/>
+    <circle cx="17" cy="38" r="4.5" fill="#1D2B53"/>
+    <circle cx="55" cy="16" r="4.5" fill="#1D2B53"/>
+    <circle cx="93" cy="38" r="4.5" fill="#1D2B53"/>
 
-  <ellipse cx="100" cy="100" rx="78" ry="28" fill="none" stroke="#5CCFE6" stroke-width="1.5" opacity="0.5" transform="rotate(-20,100,100)"/>
-  <ellipse cx="100" cy="100" rx="78" ry="28" fill="none" stroke="#5CCFE6" stroke-width="1.5" opacity="0.5" transform="rotate(20,100,100)"/>
+    <!-- Neural network connections (AI orbits) -->
+    <ellipse cx="55" cy="60" rx="42" ry="15" fill="none" stroke="#5CCFE6" stroke-width="1.2" opacity="0.5" transform="rotate(-25,55,60)"/>
+    <ellipse cx="55" cy="60" rx="42" ry="15" fill="none" stroke="#5CCFE6" stroke-width="1.2" opacity="0.5" transform="rotate(25,55,60)"/>
 
-  <circle cx="40" cy="56" r="4.5" fill="#5CCFE6" opacity="0.8"/>
-  <circle cx="160" cy="56" r="4.5" fill="#5CCFE6" opacity="0.8"/>
-  <circle cx="40" cy="144" r="4.5" fill="#5CCFE6" opacity="0.8"/>
-  <circle cx="160" cy="144" r="4.5" fill="#5CCFE6" opacity="0.8"/>
-  <circle cx="100" cy="26" r="4.5" fill="#5CCFE6" opacity="0.8"/>
-  <circle cx="100" cy="174" r="4.5" fill="#5CCFE6" opacity="0.8"/>
+    <!-- AI node accents on orbits -->
+    <circle cx="32" cy="38" r="3" fill="#5CCFE6" opacity="0.8"/>
+    <circle cx="78" cy="38" r="3" fill="#5CCFE6" opacity="0.8"/>
+    <circle cx="32" cy="82" r="3" fill="#5CCFE6" opacity="0.8"/>
+    <circle cx="78" cy="82" r="3" fill="#5CCFE6" opacity="0.8"/>
+
+    <!-- Top connection → external AI/cloud -->
+    <line x1="55" y1="16" x2="55" y2="4" stroke="#5CCFE6" stroke-width="1.5" stroke-dasharray="3 3" stroke-linecap="round"/>
+    <circle cx="55" cy="4" r="3" fill="#5CCFE6"/>
+
+    <!-- Right connection → web/MCP -->
+    <line x1="93" y1="38" x2="106" y2="38" stroke="#5CCFE6" stroke-width="1.5" stroke-dasharray="3 3" stroke-linecap="round"/>
+    <circle cx="106" cy="38" r="3" fill="#5CCFE6"/>
+
+    <!-- Left connection → search -->
+    <line x1="17" y1="82" x2="4" y2="82" stroke="#5CCFE6" stroke-width="1.5" stroke-dasharray="3 3" stroke-linecap="round"/>
+    <circle cx="4" cy="82" r="3" fill="#5CCFE6"/>
+  </g>
+
+  <!-- ===== WORDMARK ===== -->
+  <g font-family="'-apple-system','BlinkMacSystemFont','Segoe UI','Helvetica Neue','Inter',system-ui,sans-serif">
+    <!-- Main title: "Rust" in Rust orange, "Rig AI" in dark navy -->
+    <text x="125" y="54" font-size="36" letter-spacing="-0.5">
+      <tspan font-weight="700" fill="#DEA584">Rust</tspan><tspan font-weight="600" fill="#1D2B53">Rig AI</tspan>
+    </text>
+
+    <!-- Tagline -->
+    <text x="126" y="77" font-size="10" font-weight="600" fill="#718096" letter-spacing="1.8">OLLAMA · MCP · S3</text>
+
+    <!-- Bottom decorative lines -->
+    <line x1="126" y1="85" x2="380" y2="85" stroke="#DEA584" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="126" y1="87" x2="300" y2="87" stroke="#5CCFE6" stroke-width="1" stroke-linecap="round"/>
+  </g>
 </svg>
