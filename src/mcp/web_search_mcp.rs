@@ -31,7 +31,8 @@ fn mcp_transport() -> Result<TokioChildProcess, anyhow::Error> {
     Ok(transport)
 }
 
-async fn mcp_client() -> Result<RunningService<RoleClient, InitializeRequestParams>, anyhow::Error> {
+async fn mcp_client() -> Result<RunningService<RoleClient, InitializeRequestParams>, anyhow::Error>
+{
     let transport = mcp_transport()?;
     let mcp_client = ClientInfo::default()
         .serve(transport)
