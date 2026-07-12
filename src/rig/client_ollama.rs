@@ -8,12 +8,12 @@
 //! obtidas via [`extended_details`](https://docs.rs/rig-core/latest/rig_core/agent/prompt_request/struct.PromptRequest.html#method.extended_details).
 
 use crate::rig::web_search;
-use rmcp::{Peer, RoleClient};
 use rig_core::agent::{Agent, PromptResponse};
 use rig_core::client::{CompletionClient, Nothing};
 use rig_core::completion::Prompt;
 use rig_core::providers::ollama;
 use rig_core::providers::ollama::OllamaExt;
+use rmcp::{Peer, RoleClient};
 use tracing::info;
 
 /// Resultado de uma chamada de chat, contendo a resposta e métricas de tokens.
@@ -59,9 +59,13 @@ pub async fn resposta_chat_peer(
 
     let prompt_final = format!(
         "Pergunta: {}\n\n\
+         Instrução de formato: Respeite rigorosamente a quantidade de itens, \
+         a estrutura e o formato solicitados pelo usuário neste prompt.\n\n\
          Resultados da web:\n{}\n\n\
-         Com base APENAS nos resultados acima, responda em português \
-         de forma clara e completa.",
+         Use os resultados da web como fonte principal. \
+         Se necessário, utilize seu conhecimento técnico para complementar \
+         e atingir a profundidade solicitada. Responda em português de forma \
+         clara e completa.",
         prompt, contexto
     );
 
@@ -114,7 +118,12 @@ async fn rust_agente() -> Result<AgentMCP, anyhow::Error> {
 
     let rust_agente = client
         .agent(model)
-        .preamble("Você é um assistente de IA útil, amigável e prestativo. Responda às perguntas de forma clara e concisa. Responda sempre em português (Brasil).")
+        .temperature(0.3)
+        .additional_params(serde_json::json!({
+        "top_p": 0.95,
+        "top_k": 64,
+    }))
+        .preamble("Você é um assistente de IA útil, amigável e prestativo. Responda às perguntas de forma clara, detalhada e estruturada. Responda sempre em português (Brasil). Siga as instruções do usuário rigorosamente, incluindo formatos, quantidades e estruturas solicitadas.")
         .build();
 
     Ok(rust_agente)

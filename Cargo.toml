@@ -7,6 +7,8 @@ edition = "2024"
 debug = 1
 split-debuginfo = "unpacked"
 codegen-units = 256
+incremental=false
+opt-level=0
 
 [dependencies]
 rig-core = { version = "0.39.0", features = ["rmcp"] }

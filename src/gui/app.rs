@@ -12,9 +12,11 @@
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
-use iced::widget::{button, column, container, markdown, row, scrollable, text, text_input, toggler};
+use iced::widget::{
+    button, column, container, markdown, row, scrollable, text, text_input, toggler,
+};
 
-use iced::{alignment, time, Font, Length, Size, Subscription, Task};
+use iced::{Font, Length, Size, Subscription, Task, alignment, time};
 use rmcp::{Peer, RoleClient};
 
 use crate::mcp::web_search_mcp::McpClientManager;
@@ -64,7 +66,10 @@ enum Message {
     /// Tick do timer de animação do splash.
     Tick,
     /// Placeholder — clique em links será tratado futuramente.
-    #[expect(dead_code, reason = "placeholder - clique em links será tratado futuramente")]
+    #[expect(
+        dead_code,
+        reason = "placeholder - clique em links será tratado futuramente"
+    )]
     LinkClicked(markdown::Url),
     /// Usuário clicou em "Copiar".
     Copiar,
@@ -85,10 +90,9 @@ impl App {
             search_web: true,
             result,
         };
-        let task = Task::perform(
-            tokio::time::sleep(Duration::from_secs(5)),
-            |_| Message::SplashPronto,
-        );
+        let task = Task::perform(tokio::time::sleep(Duration::from_secs(5)), |_| {
+            Message::SplashPronto
+        });
         (app, task)
     }
 
@@ -156,12 +160,8 @@ impl App {
                 self.tick += 1;
                 Task::none()
             }
-            Message::LinkClicked(_) => {
-                Task::none()
-            }
-            Message::Copiar => {
-                iced::clipboard::write::<Message>(self.resposta.clone())
-            }
+            Message::LinkClicked(_) => Task::none(),
+            Message::Copiar => iced::clipboard::write::<Message>(self.resposta.clone()),
         }
     }
 
@@ -181,7 +181,10 @@ impl App {
 
     fn tela_splash(&self) -> iced::Element<'_, Message> {
         const BANNER: &str = include_str!("../../banner.txt");
-        let banner = text(BANNER).size(16).font(Font::MONOSPACE).color([0.0, 1.0, 1.0]);
+        let banner = text(BANNER)
+            .size(16)
+            .font(Font::MONOSPACE)
+            .color([0.0, 1.0, 1.0]);
         let version = text("Rust Rig AI v0.1.0 — Daniel Dias").size(14);
 
         let progress = (self.tick as f32) / 25.0;
@@ -224,7 +227,10 @@ impl App {
 
         let entrada = row![input, enviar_btn].spacing(10);
 
-        let mut col = column![toggle, entrada].spacing(10).padding(10);
+        let mut col = column![toggle, entrada]
+            .spacing(10)
+            .padding(10)
+            .height(Length::Fill);
 
         match self.fase {
             Fase::Processando => {
@@ -241,12 +247,11 @@ impl App {
 
                     col = col.push(
                         row![
-                            scrollable(md_view)
-                            .width(Length::Fill)
-                            .height(Length::Fill),
+                            scrollable(md_view).width(Length::Fill).height(Length::Fill),
                             button("Copiar").on_press(Message::Copiar),
                         ]
-                        .spacing(10),
+                        .spacing(10)
+                        .height(Length::Fill),
                     );
 
                     let total = self.tokens_total;

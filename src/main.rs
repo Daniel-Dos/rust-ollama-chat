@@ -1,4 +1,6 @@
-#![doc(html_logo_url = "https://raw.githubusercontent.com/Daniel-Dos/rust-ollama-chat/master/logo.svg")]
+#![doc(
+    html_logo_url = "https://raw.githubusercontent.com/Daniel-Dos/rust-ollama-chat/master/logo.svg"
+)]
 
 //! Aplicação desktop Rust Rig AI — integração Ollama + busca web MCP + S3.
 //!
@@ -13,7 +15,7 @@
 use crate::aws::s3_integration as s3;
 use crate::banner::banner_text;
 use crate::mcp::web_search_mcp::McpClientManager;
-use tracing::info;
+use tracing::{error, info, warn};
 
 #[allow(dead_code)]
 mod aws;
@@ -28,25 +30,31 @@ fn main() -> Result<(), anyhow::Error> {
 
     tracing_subscriber::fmt()
         .with_env_filter(
-            tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("warn,Rust_Rig_AI=info")),
+            tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|e| {
+                warn!("Não foi possivel ler a variavel RUST_LOG, ira seguir no padrao: {e}");
+                tracing_subscriber::EnvFilter::new(
+                    "warn,Rust_Rig_AI=trace,rig_core=trace,reqwest=trace",
+                )
+            }),
         )
         .init();
 
     banner_text::print_banner();
-    println!("Bem-vindo ao Rust Rig AI! \nIniciando o processo de integração com Ollama e AWS S3...\n");
+    info!(
+        "Bem-vindo ao Rust Rig AI! \nIniciando o processo de integração com Ollama e AWS S3...\n"
+    );
 
     let mut mcp_manager = rt.block_on(McpClientManager::init())?;
     info!("MCP client ready");
 
-    println!("Iniciando interface gráfica...");
+    info!("Iniciando interface gráfica...");
     std::thread::sleep(std::time::Duration::from_secs(3));
 
     let resposta = match gui::app::run(&mcp_manager) {
         Ok(r) => r,
         Err(e) => {
-            println!("{e}");
-            println!("Ollama e MCP mantidos em execução. Feche o terminal quando quiser.");
+            error!("{e}");
+            warn!("Ollama e MCP mantidos em execução. Feche o terminal quando quiser.");
             rt.block_on(mcp_manager.shutdown())?;
             return Ok(());
         }
