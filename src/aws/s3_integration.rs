@@ -99,3 +99,4 @@ fn generete_random_file_name() -> String {
         .map(char::from)
         .collect()
 }
+
