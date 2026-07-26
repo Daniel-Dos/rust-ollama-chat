@@ -1,25 +1,43 @@
 version: "3.8"
 services:
- floci:
-  image: floci/floci:1.5.19
-  ports:
-    - "4566:4566"
-  volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-    - ./data:/app/data
-  environment:
-    FLOCI_STORAGE_MODE: hybrid
-    FLOCI_DEFAULT_REGION: localhost
-    FLOCI_HOSTNAME: floci
-    FLOCI_SERVICES_DYNAMODB_ENABLED: true
-  restart: unless-stopped
-  networks:
-     - floci-network
+  floci:
+    image: floci/floci:1.5.19
+    ports:
+      - "4566:4566"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/app/data
+    environment:
+      FLOCI_STORAGE_MODE: hybrid
+      FLOCI_DEFAULT_REGION: localhost
+      FLOCI_HOSTNAME: floci
+      FLOCI_SERVICES_DYNAMODB_ENABLED: true
+    restart: unless-stopped
+    networks:
+      - floci-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 3s
+      timeout: 2s
+      retries: 5
 
-  # ==========================================================================
-  # Networking
-  # ==========================================================================
+  create-bucket:
+    image: amazon/aws-cli:latest
+    depends_on:
+      floci:
+        condition: service_healthy
+    environment:
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_DEFAULT_REGION: us-east-1
+    command: s3 mb s3://rust-rig-ai --endpoint-url http://floci:4566 || exit 0
+    networks:
+      - floci-network
+
+    # ==========================================================================
+    # Networking
+    # ==========================================================================
 networks:
-    floci-network:
-      name: floci-network
-      driver: bridge
+  floci-network:
+    name: floci-network
+    driver: bridge

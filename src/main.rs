@@ -17,7 +17,6 @@ use crate::banner::banner_text;
 use crate::mcp::web_search_mcp::McpClientManager;
 use tracing::{error, info, warn};
 
-#[allow(dead_code)]
 mod aws;
 mod banner;
 mod gui;
@@ -33,7 +32,7 @@ fn main() -> Result<(), anyhow::Error> {
             tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|e| {
                 warn!("Não foi possivel ler a variavel RUST_LOG, ira seguir no padrao: {e}");
                 tracing_subscriber::EnvFilter::new(
-                    "warn,Rust_Rig_AI=trace,rig_core=trace,reqwest=trace",
+                    "warn,main=trace,rig_core=trace,reqwest=trace",
                 )
             }),
         )

@@ -34,6 +34,7 @@ if not _FASTMCP_AVAILABLE:
 client = Client()
 
 def _web_search_impl(query: str, max_results: int = 3) -> Dict[str, Any]:
+  max_results = min(max_results, 3)
   print(f"[mcp] web_search(query={query!r}, max_results={max_results})", file=sys.stderr, flush=True)
   res = client.web_search(query=query, max_results=max_results)
   import json

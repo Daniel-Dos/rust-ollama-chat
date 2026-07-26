@@ -122,6 +122,25 @@ impl McpClientManager {
         self.running_service.peer().clone()
     }
 
+    /// Retorna todas as ferramentas disponíveis no servidor MCP.
+    ///
+    /// # Errors
+    ///
+    /// Retorna erro se a chamada RPC falhar.
+    pub async fn get_tools(&self) -> Result<Vec<Tool>, anyhow::Error> {
+        let tools = self.running_service.peer().list_all_tools().await?;
+        info!("Discovered {} MCP tool(s)", tools.len());
+        Ok(tools)
+    }
+
+    /// Retorna o `Peer<RoleClient>` para uso como sink com `rig-core` rmcp tools.
+    ///
+    /// O peer implementa o trait `Sink` necessário para o rig-core se comunicar
+    /// com o servidor MCP ao chamar tools via `AgentBuilder::rmcp_tools()`.
+    pub fn get_sink(&self) -> Peer<RoleClient> {
+        self.running_service.peer().clone()
+    }
+
     /// Encerra a conexão com o servidor Python MCP.
     ///
     /// Fecha o processo filho de forma limpa. Deve ser chamada antes
