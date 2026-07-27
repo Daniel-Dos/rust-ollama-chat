@@ -13,7 +13,7 @@ opt-level=0
 [dependencies]
 rig-core = { version = "0.40.0", features = ["rmcp"] }
 rmcp = { version = "1.8.0", features = ["client", "transport-child-process"] }
-tokio = { version = "1.52.3", features = ["rt", "rt-multi-thread", "macros", "process"] }
+tokio = { version = "1.52.3", features = ["rt", "rt-multi-thread", "macros", "process", "signal"] }
 anyhow = "1.0.103"
 serde_json = "1.0"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
@@ -23,6 +23,8 @@ aws-config = { version = "1.8.18", default-features = false, features = ["rt-tok
 regex = "1.12.4"
 rand = "0.10.2"
 iced = { version = "0.13", features = ["tokio", "markdown"] }
+axum = { version = "0.8.9" }
+serde = { version = "1.0.228", features = ["derive"] }
 
 [[bin]]
 name = "main"
@@ -31,3 +33,7 @@ path = "src/main.rs"
 [[bin]]
 name = "terminal"
 path = "src/terminal.rs"
+
+[[bin]]
+name = "api_rest"
+path = "src/app.rs"
