@@ -22,18 +22,32 @@ use rmcp::{Peer, RoleClient};
 use crate::mcp::web_search_mcp::McpClientManager;
 use crate::rig::client_ollama;
 
-/// Estado principal da aplicação GUI.
+/// Estado principal da aplicação GUI Iced.
+///
+/// Mantém o estado do peer MCP, o prompt atual, a resposta recebida,
+/// as métricas de tokens e a máquina de estados da interface.
 pub struct App {
+    /// Peer MCP clonado do `McpClientManager` para chamadas RPC.
     peer: Peer<RoleClient>,
+    /// Texto digitado pelo usuário no campo de entrada.
     prompt: String,
+    /// Última resposta recebida do modelo Ollama.
     resposta: String,
+    /// Itens Markdown parseados da resposta para renderização.
     parsed_items: Vec<markdown::Item>,
+    /// Tokens de entrada (prompt) da última requisição.
     tokens_input: u64,
+    /// Tokens de saída (completion) da última resposta.
     tokens_output: u64,
+    /// Total de tokens consumidos (entrada + saída).
     tokens_total: u64,
+    /// Fase atual da máquina de estados da interface.
     fase: Fase,
+    /// Contador de ticks para animação da barra de progresso do splash.
     tick: u64,
+    /// Indica se o toggle "Buscar na web" está ativado.
     search_web: bool,
+    /// Compartilha a resposta com o código externo (`main.rs`) via Mutex.
     result: Arc<Mutex<Option<String>>>,
 }
 
@@ -76,6 +90,10 @@ enum Message {
 }
 
 impl App {
+    /// Cria uma nova instância do aplicativo Iced na fase `Splash`.
+    ///
+    /// Agenda uma task que aguarda 5 segundos e então emite o evento
+    /// `Message::SplashPronto` para transicionar para a tela de chat.
     fn new(peer: Peer<RoleClient>, result: Arc<Mutex<Option<String>>>) -> (Self, Task<Message>) {
         let app = App {
             peer,
@@ -96,6 +114,11 @@ impl App {
         (app, task)
     }
 
+    /// Processa eventos da interface e atualiza o estado do aplicativo.
+    ///
+    /// Gerencia a máquina de estados: Splash → Pronto → Processando → Pronto.
+    /// Dispara tasks assíncronas para consultar o Ollama e retorna tasks
+    /// que o runtime Iced deve executar.
     fn update(&mut self, message: Message) -> Task<Message> {
         match message {
             Message::SplashPronto => {
@@ -165,6 +188,10 @@ impl App {
         }
     }
 
+    /// Renderiza a interface de acordo com a fase atual.
+    ///
+    /// Delega para [`Self::tela_splash`] ou [`Self::tela_chat`]
+    /// dependendo do valor de [`self.fase`](App::fase).
     fn view(&self) -> iced::Element<'_, Message> {
         match self.fase {
             Fase::Splash => self.tela_splash(),
@@ -172,6 +199,10 @@ impl App {
         }
     }
 
+    /// Retorna a subscription Iced para animações temporizadas.
+    ///
+    /// Durante a fase [`Fase::Splash`], emite `Message::Tick` a cada 200ms
+    /// para atualizar a barra de progresso. Nas demais fases, não há subscription.
     fn subscription(&self) -> Subscription<Message> {
         match self.fase {
             Fase::Splash => time::every(Duration::from_millis(200)).map(|_| Message::Tick),
@@ -179,6 +210,11 @@ impl App {
         }
     }
 
+    /// Renderiza a tela de splash com banner ASCII e barra de progresso.
+    ///
+    /// Exibe o banner do arquivo `banner.txt`, a versão do software e
+    /// uma barra de progresso animada com caracteres `█` e `░` que se
+    /// completa em aproximadamente 5 segundos (25 ticks de 200ms).
     fn tela_splash(&self) -> iced::Element<'_, Message> {
         const BANNER: &str = include_str!("../../banner.txt");
         let banner = text(BANNER)
@@ -204,6 +240,12 @@ impl App {
         .into()
     }
 
+    /// Renderiza a tela de chat com entrada de texto, toggle de busca web
+    /// e área de resposta com renderização Markdown e métricas de tokens.
+    ///
+    /// Durante o processamento, exibe "Processando..." em amarelo.
+    /// Após a resposta, mostra o conteúdo formatado com botão "Copiar"
+    /// e rodapé com total de tokens e percentuais de entrada/saída.
     fn tela_chat(&self) -> iced::Element<'_, Message> {
         let toggle = toggler(self.search_web)
             .label("Buscar na web")

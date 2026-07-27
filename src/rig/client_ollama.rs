@@ -168,7 +168,17 @@ async fn rust_agente_com_mcp_tools(
     Ok(agente)
 }
 
-/// TESTE: Valida tool calling nativo MCP com novo agente
+/// Executa o modelo Ollama com tool calling nativo MCP (rig-core v0.40).
+///
+/// Diferente de [`resposta_chat_peer`] e [`chat_direct`], esta função constrói
+/// um agente que anexa as ferramentas MCP (`web_search`, `web_fetch`)
+/// diretamente via `AgentBuilder::rmcp_tools()`, permitindo que o próprio LLM
+/// decida quando e como chamar as ferramentas de busca web durante a geração.
+///
+/// # Errors
+///
+/// Retorna erro se a variável `OLLAMA_MODEL` não estiver definida, se a
+/// descoberta de ferramentas MCP falhar, ou se a chamada ao Ollama falhar.
 pub async fn mcp_tool_calling(
     mcp_manager: &McpClientManager, prompt_user: &str,
 ) -> Result<ChatResult, anyhow::Error> {

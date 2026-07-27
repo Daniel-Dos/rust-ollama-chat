@@ -20,5 +20,7 @@ jobs:
       run: cargo build --bin main --verbose
     - name: Build terminal
       run: cargo build --bin terminal --verbose
+    - name: Build rest
+      run: cargo build --bin api_rest --verbose
     - name: Run tests
       run: cargo test --verbose
