@@ -21,13 +21,15 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       - run: cargo doc --no-deps
       - run: |
-          crate=$(sed -n 's/^name *= *"\(.*\)"/\1/p' Cargo.toml | tr '-' '_' | tr '[:upper:]' '[:lower:]')
+          # Use cargo metadata to reliably get the package name (works for workspaces)
+          crate=$(cargo metadata --no-deps --format-version 1 | python -c "import sys,json;print(json.load(sys.stdin)['packages'][0]['name'])" | tr '-' '_' | tr '[:upper:]' '[:lower:]')
           echo "<meta http-equiv=\"refresh\" content=\"0;url=${crate}/index.html\">" > target/doc/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: target/doc
 
   deploy:
+    # Deploy when pushing to the repository's default branch
     if: github.ref == 'refs/heads/master'
     environment:
       name: github-pages
