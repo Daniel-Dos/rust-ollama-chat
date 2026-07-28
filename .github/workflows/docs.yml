@@ -26,6 +26,7 @@ jobs:
           path: target/doc
 
   deploy:
+    # Deploy when pushing to the repository's default branch
     if: github.ref == 'refs/heads/master'
     environment:
       name: github-pages
