@@ -68,6 +68,6 @@ async fn main() -> Result<(), anyhow::Error> {
 
     let meu_bucket = s3::get_my_bucket().await?;
     tracing::info!("Obtendo o nome do bucket S3: {}", meu_bucket);
-    s3::upload_bucket(meu_bucket, result).await?;
+    s3::upload_bucket(&meu_bucket, result).await?;
     Ok(())
 }
