@@ -63,6 +63,6 @@ fn main() -> Result<(), anyhow::Error> {
 
     let meu_bucket = rt.block_on(s3::get_my_bucket())?;
     info!("Obtendo o nome do bucket S3: {}", meu_bucket);
-    rt.block_on(s3::upload_bucket(meu_bucket, resposta))?;
+    rt.block_on(s3::upload_bucket(&meu_bucket, resposta))?;
     Ok(())
 }

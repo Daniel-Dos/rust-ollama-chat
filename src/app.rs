@@ -12,6 +12,7 @@ mod rest;
 mod banner;
 mod mcp;
 mod rig;
+mod aws;
 
 use std::sync::Arc;
 use tracing::log::{error, info, warn};
@@ -55,6 +56,5 @@ async fn main() -> Result<(), anyhow::Error> {
     if let Err(e) = mcp_manager.shutdown().await {
         error!("Erro ao encerrar MCP: {e}");
     }
-
     Ok(())
 }

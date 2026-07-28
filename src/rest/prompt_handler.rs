@@ -3,6 +3,7 @@
 use crate::rest::message::Message;
 use crate::rest::state::AppState;
 use crate::rig::client_ollama as ollama;
+use crate::aws::s3_integration as s3;
 use axum::extract::{Query, State};
 use axum::http::StatusCode;
 use axum::Json;
@@ -24,5 +25,9 @@ pub async fn create_prompt(
         .await
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
     message.texto = result.resposta;
+
+    let mybucker = s3::get_my_bucket().await.map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+    s3::upload_bucket(&mybucker, message.texto).await.map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+    message.texto = format!("✅ Prompt processado com sucesso! Resposta enviada para o bucket S3: {}", mybucker);
     Ok(Json(message))
 }

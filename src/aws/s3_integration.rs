@@ -70,7 +70,7 @@ pub async fn get_my_bucket() -> Result<String, anyhow::Error> {
 /// # Errors
 ///
 /// Retorna erro se a configuração AWS falhar ou se o upload falhar.
-pub async fn upload_bucket(my_bucket: String, payload: String) -> Result<(), anyhow::Error> {
+pub async fn upload_bucket(my_bucket: &str, payload: String) -> Result<(), anyhow::Error> {
     let config = configure_aws()
         .await
         .inspect_err(|e| tracing::error!("Falha ao configurar AWS: {e}"))?;
