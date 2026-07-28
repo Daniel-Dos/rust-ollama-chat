@@ -5,12 +5,10 @@
 //! - `GET /api/prompt?texto=<consulta>` — envia um prompt ao modelo Ollama
 //!   com tool calling MCP e retorna a resposta gerada.
 
-use axum::{Json, Router};
-use axum::extract::State;
-use axum::routing::get;
-use crate::rest::message::Message;
 use crate::rest::prompt_handler;
 use crate::rest::state::AppState;
+use axum::routing::{get, post};
+use axum::Router;
 
 /// Constrói o roteador Axum com as rotas da API.
 ///
@@ -18,6 +16,6 @@ use crate::rest::state::AppState;
 /// registra a rota `GET /api/prompt` ligada ao handler de prompt.
 pub async fn router_api(state: AppState) -> Router {
     Router::new()
-        .route("/api/prompt", get(prompt_handler::create_prompt))
+        .route("/api/prompt", post(prompt_handler::create_prompt))
         .with_state(state)
 }

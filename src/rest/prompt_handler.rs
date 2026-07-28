@@ -19,7 +19,7 @@ use axum::Json;
 /// Retorna `500 Internal Server Error` se a chamada ao modelo falhar.
 pub async fn create_prompt(
     State(state): State<AppState>,
-    Query(mut message): Query<Message>,
+    mut message: Json<Message>,
 ) -> Result<Json<Message>, (StatusCode, String)> {
     let result = ollama::mcp_tool_calling(state.mcp_manager.as_ref(), &message.texto)
         .await
@@ -27,7 +27,7 @@ pub async fn create_prompt(
     message.texto = result.resposta;
 
     let mybucker = s3::get_my_bucket().await.map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
-    s3::upload_bucket(&mybucker, message.texto).await.map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+    s3::upload_bucket(&mybucker, message.texto.clone()).await.map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
     message.texto = format!("✅ Prompt processado com sucesso! Resposta enviada para o bucket S3: {}", mybucker);
-    Ok(Json(message))
+    Ok(message)
 }
