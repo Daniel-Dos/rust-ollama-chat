@@ -9,5 +9,5 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Message {
     /// Texto do prompt (entrada) ou resposta gerada (saída).
-    pub texto: String,
+    pub prompt: String,
 }

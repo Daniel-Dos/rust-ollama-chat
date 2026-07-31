@@ -70,16 +70,17 @@ pub async fn get_my_bucket() -> Result<String, anyhow::Error> {
 /// # Errors
 ///
 /// Retorna erro se a configuração AWS falhar ou se o upload falhar.
-pub async fn upload_bucket(my_bucket: &str, payload: String) -> Result<(), anyhow::Error> {
+pub async fn upload_bucket(my_bucket: &str, payload: String) -> Result<String, anyhow::Error> {
     let config = configure_aws()
         .await
         .inspect_err(|e| tracing::error!("Falha ao configurar AWS: {e}"))?;
     let client_s3 = client_new(&config);
+    let file_name= generete_random_file_name().add(".md");
 
     let upload_s3 = client_s3
         .put_object()
         .bucket(my_bucket)
-        .key(generete_random_file_name().add(".md"))
+        .key(&file_name)
         .body(ByteStream::from(payload.into_bytes()))
         .send()
         .await
@@ -89,7 +90,7 @@ pub async fn upload_bucket(my_bucket: &str, payload: String) -> Result<(), anyho
         "Arquivo enviado para o bucket S3: {}",
         upload_s3.e_tag().unwrap_or_default()
     );
-    Ok(())
+    Ok((file_name))
 }
 
 fn generete_random_file_name() -> String {
